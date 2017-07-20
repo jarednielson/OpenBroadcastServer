@@ -39,6 +39,11 @@ public class ClientListenerTask implements Runnable {
 			String msg = "";
 			try {
 				msg = in.readLine();
+				
+				if(msg == null){
+					socket.close();
+					break;
+				}
 				synchronized(lock){
 					writer.write(msg);
 				}
