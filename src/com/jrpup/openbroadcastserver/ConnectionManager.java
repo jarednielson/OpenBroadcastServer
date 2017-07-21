@@ -44,6 +44,11 @@ public class ConnectionManager {
 	private ArrayList<Socket> connections;
 	
 	/**
+	 * List of callBack subscribers
+	 */
+	private ConnectionManagerCallable callBack;
+	
+	/**
 	 * Flag which is true if the ConnectionManager is listening
 	 * Also used to stop listenerThread
 	 */
@@ -118,6 +123,20 @@ public class ConnectionManager {
 	}
 	
 	/**
+	 * Sets a callback method whena  connection is made.
+	 * @param callBack
+	 */
+	public void beginListen(ConnectionManagerCallable callBack){
+		if(!isListening){
+			return;
+		}
+		
+		this.callBack = callBack;
+		beginListen();
+		
+	}
+	
+	/**
 	 * Starts the listening process for this ConnectionManager. The 
 	 * ConnectionManager will begin listening for and accepting 
 	 * connections on it's own managed thread. The ConnectionManager 
@@ -128,7 +147,7 @@ public class ConnectionManager {
 	 * 
 	 * @param maxConnections - The maximum number of connections to listen for.
 	 */
-	public void beginListen(int maxConnections){
+	public void beginListen(int port, int maxConnections){
 		if(isListening){
 			return;
 		}
@@ -138,7 +157,37 @@ public class ConnectionManager {
 		}
 		ConnectionManager.maxConnections = maxConnections;
 		
-		beginListen();
+		beginListen(port);
+	}
+	
+	
+	/**
+	 * Sets the port number for this ConnectionManager and starts this ConnnectionManager listening 
+	 * @param port
+	 */
+	public void beginListen(int port){
+		if(isListening){
+			return;
+		}
+		
+		ConnectionManager.port = port;
+		
+		beginListen();	
+	}
+	
+	/**
+	 * Sets the port number for this ConnectionManager and starts this ConnnectionManager listening 
+	 * @param callBack - callback for connections
+	 * @param port
+	 */
+	public void beginListen(ConnectionManagerCallable callBack, int port){
+		if(isListening){
+			return;
+		}
+		
+		ConnectionManager.port = port;
+		
+		beginListen(callBack);	
 	}
 	
 	/**
@@ -175,6 +224,8 @@ public class ConnectionManager {
 
 		@Override
 		public void run() {
+			System.out.println("ConnectionManager::BeginListen on Port " + port);
+			
 			try{
 				ss = new ServerSocket(port);
 			} catch(IOException e){
@@ -185,11 +236,24 @@ public class ConnectionManager {
 			
 			while(numConnections < maxConnections){
 				try {
-					connections.add(ss.accept());
+					Socket connection = ss.accept();
+					connections.add(connection);
 					numConnections++;
+					if(callBack != null){
+						Thread callable = new Thread(new Runnable(){
+
+							@Override
+							public void run() {
+								callBack.OnConnection(connection);
+								
+							}});
+						callable.start();
+					}
+					
+					System.out.println("Connection established");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 					isListening = false;
 				}
 				
@@ -198,6 +262,17 @@ public class ConnectionManager {
 					break;
 				}
 			}
+			
+			try {
+				//Close the server socket if it's still open
+				if(!ss.isClosed()){
+					ss.close();					
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("ConnectionManager::EndListen");
 			
 		}
 		
