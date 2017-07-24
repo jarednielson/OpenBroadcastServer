@@ -23,7 +23,7 @@ public class ConnectionManager {
 	/**
 	 * The maximum number of Connections allowable by the ConnectionManager
 	 */
-	private static int maxConnections = 12;
+	//private static int maxConnections = 12;
 	/**
 	 * The port the ConnectionManager listens on
 	 */
@@ -136,29 +136,30 @@ public class ConnectionManager {
 		
 	}
 	
-	/**
-	 * Starts the listening process for this ConnectionManager. The 
-	 * ConnectionManager will begin listening for and accepting 
-	 * connections on it's own managed thread. The ConnectionManager 
-	 * will continue listening until MaxConnections have been established or
-	 * endListen is called.
-	 * 
-	 * If the ConnectionManager is already listening method has no effect
-	 * 
-	 * @param maxConnections - The maximum number of connections to listen for.
-	 */
-	public void beginListen(int port, int maxConnections){
-		if(isListening){
-			return;
-		}
-		
-		if(maxConnections < 2 ){
-			throw new IllegalArgumentException("maxConnections must be greater than 2");
-		}
-		ConnectionManager.maxConnections = maxConnections;
-		
-		beginListen(port);
-	}
+//	/**
+//	 * Starts the listening process for this ConnectionManager. The 
+//	 * ConnectionManager will begin listening for and accepting 
+//	 * connections on it's own managed thread. The ConnectionManager 
+//	 * will continue listening until MaxConnections have been established or
+//	 * endListen is called.
+//	 * 
+//	 * If the ConnectionManager is already listening method has no effect
+//	 * 
+//	 * @param maxConnections - The maximum number of connections to listen for.
+//	 */
+//	public void beginListen(int port, int maxConnections){
+//		if(isListening){
+//			return;
+//		}
+//		
+//		if(maxConnections < 2 ){
+//			throw new IllegalArgumentException("maxConnections must be greater than 2");
+//		}
+//		ConnectionManager.maxConnections = maxConnections;
+//		
+//		beginListen(port);
+//	}
+
 	
 	
 	/**
@@ -234,7 +235,7 @@ public class ConnectionManager {
 				return;
 			}
 			
-			while(numConnections < maxConnections){
+			while(isListening){
 				try {
 					Socket connection = ss.accept();
 					connections.add(connection);
@@ -255,11 +256,6 @@ public class ConnectionManager {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
 					isListening = false;
-				}
-				
-				//If we're no longer listening break out of loop which will terminate thread on its own
-				if(!isListening){
-					break;
 				}
 			}
 			

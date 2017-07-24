@@ -7,7 +7,9 @@ public class OpenBroadcastServerLauncher {
 	private static int port = 60000;
 	
 	public static void main(String[] args) {
-		ConnectionManager conManager = ConnectionManager.getConnectionManager();
+		ConnectionManager conManager = ConnectionManager.getConnectionManager(port);
+		
+		
 		
 		conManager.beginListen();
 		
@@ -17,13 +19,7 @@ public class OpenBroadcastServerLauncher {
 		
 		conManager.endListen();
 		
-		in.nextLine();
-		
-		conManager.beginListen();
-		
-		in.nextLine();
-		
-		conManager.endListen();
+		in.close();
 	}
 
 }

@@ -6,9 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.Socket;
 
-public class ClientListenerTask implements Runnable {
+public class ClientListener implements ConnectionManagerCallable {
 
-	private Socket socket;
 	private Writer writer;
 	
 	
@@ -16,19 +15,18 @@ public class ClientListenerTask implements Runnable {
 	private boolean continueTask;
 	
 	
-	public ClientListenerTask(Socket socket, Writer writer, Object lock){
-		this.socket = socket;
+	public ClientListener(Socket socket, Writer writer, Object lock){
 		continueTask = true;
 		this.writer = writer;
 		this.lock = lock;
 	}
 	
 	@Override
-	public void run() {
+	public void OnConnection(Socket s) {
 		BufferedReader in;
 		
 		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,7 +39,7 @@ public class ClientListenerTask implements Runnable {
 				msg = in.readLine();
 				
 				if(msg == null){
-					socket.close();
+					s.close();
 					break;
 				}
 				synchronized(lock){
@@ -62,10 +60,6 @@ public class ClientListenerTask implements Runnable {
 			e.printStackTrace();
 		}
 
-	}
-	
-	public void killThread(){
-		continueTask = false;
 	}
 
 }
