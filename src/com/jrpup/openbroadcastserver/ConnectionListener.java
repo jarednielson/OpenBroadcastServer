@@ -6,26 +6,26 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * The ConnectionManager is primarily responsible for listening for and managing
+ * The ConnectionListener is primarily responsible for listening for and managing
  * connections with clients.
  * 
- * The ConnectionManager follows the singleton pattern as such only one instance of the
- * ConnectionManager can be constructed in a single session. To get a reference to
+ * The ConnectionListener follows the singleton pattern as such only one instance of the
+ * ConnectionListener can be constructed in a single session. To get a reference to
  * the manager use the static method ConstructionManager.getConstructionManager().
  * @author Jared Nielson
  *
  */
-public class ConnectionManager {
+public class ConnectionListener {
 	/**
-	 * Singleton intance of the ConnectionManager
+	 * Singleton intance of the ConnectionListener
 	 */
-	private static ConnectionManager instance = null;
+	private static ConnectionListener instance = null;
 	/**
-	 * The maximum number of Connections allowable by the ConnectionManager
+	 * The maximum number of Connections allowable by the ConnectionListener
 	 */
 	//private static int maxConnections = 12;
 	/**
-	 * The port the ConnectionManager listens on
+	 * The port the ConnectionListener listens on
 	 */
 	private static int port = 60000;
 	
@@ -39,7 +39,7 @@ public class ConnectionManager {
 	private Thread listenerThread;
 	
 	/**
-	 * Current connections for this ConnectionManager
+	 * Current connections for this ConnectionListener
 	 */
 	private ArrayList<Socket> connections;
 	
@@ -49,12 +49,12 @@ public class ConnectionManager {
 	private ConnectionManagerCallable callBack;
 	
 	/**
-	 * Flag which is true if the ConnectionManager is listening
+	 * Flag which is true if the ConnectionListener is listening
 	 * Also used to stop listenerThread
 	 */
 	private volatile boolean isListening;
 	/**
-	 * The current number of connections open by the ConnectionManager
+	 * The current number of connections open by the ConnectionListener
 	 */
 	private int numConnections;
 	
@@ -62,7 +62,7 @@ public class ConnectionManager {
 	 * Private constructor as per the Singleton pattern.
 	 * @throws IOException
 	 */
-	private ConnectionManager(){
+	private ConnectionListener(){
 		isListening = false;
 		connections = new ArrayList<Socket>();
 		numConnections = 0;
@@ -75,24 +75,24 @@ public class ConnectionManager {
 	 * @return
 	 * @throws IOException 
 	 */
-	public static ConnectionManager getConnectionManager(){
+	public static ConnectionListener getConnectionManager(){
 		if(instance == null){
-			instance = new ConnectionManager();
+			instance = new ConnectionListener();
 		}
 		
 		return instance;
 	}
 	
 	/**
-	 * Returns an instance of the ConnectionManager and attempts to
+	 * Returns an instance of the ConnectionListener and attempts to
 	 * set the port number if it has not already been set for the singleton.
 	 * @param port - The port number
 	 * @return
 	 * @throws IOException 
 	 */
-	public static ConnectionManager getConnectionManager(int port){
+	public static ConnectionListener getConnectionManager(int port){
 		if(instance == null){
-			ConnectionManager.port = port;
+			ConnectionListener.port = port;
 		}
 		
 		return getConnectionManager();
@@ -103,13 +103,13 @@ public class ConnectionManager {
 	}
 	
 	/**
-	 * Starts the listening process for this ConnectionManager. The 
-	 * ConnectionManager will begin listening for and accepting 
-	 * connections on it's own managed thread. The ConnectionManager 
+	 * Starts the listening process for this ConnectionListener. The 
+	 * ConnectionListener will begin listening for and accepting 
+	 * connections on it's own managed thread. The ConnectionListener 
 	 * will continue listening until MaxConnections have been established or
 	 * endListen is called.
 	 * 
-	 * If the ConnectionManager is already listening method has no effect
+	 * If the ConnectionListener is already listening method has no effect
 	 */
 	public void beginListen(){
 		if(isListening){
@@ -137,13 +137,13 @@ public class ConnectionManager {
 	}
 	
 //	/**
-//	 * Starts the listening process for this ConnectionManager. The 
-//	 * ConnectionManager will begin listening for and accepting 
-//	 * connections on it's own managed thread. The ConnectionManager 
+//	 * Starts the listening process for this ConnectionListener. The 
+//	 * ConnectionListener will begin listening for and accepting 
+//	 * connections on it's own managed thread. The ConnectionListener 
 //	 * will continue listening until MaxConnections have been established or
 //	 * endListen is called.
 //	 * 
-//	 * If the ConnectionManager is already listening method has no effect
+//	 * If the ConnectionListener is already listening method has no effect
 //	 * 
 //	 * @param maxConnections - The maximum number of connections to listen for.
 //	 */
@@ -155,7 +155,7 @@ public class ConnectionManager {
 //		if(maxConnections < 2 ){
 //			throw new IllegalArgumentException("maxConnections must be greater than 2");
 //		}
-//		ConnectionManager.maxConnections = maxConnections;
+//		ConnectionListener.maxConnections = maxConnections;
 //		
 //		beginListen(port);
 //	}
@@ -163,7 +163,7 @@ public class ConnectionManager {
 	
 	
 	/**
-	 * Sets the port number for this ConnectionManager and starts this ConnnectionManager listening 
+	 * Sets the port number for this ConnectionListener and starts this ConnnectionManager listening 
 	 * @param port
 	 */
 	public void beginListen(int port){
@@ -171,13 +171,13 @@ public class ConnectionManager {
 			return;
 		}
 		
-		ConnectionManager.port = port;
+		ConnectionListener.port = port;
 		
 		beginListen();	
 	}
 	
 	/**
-	 * Sets the port number for this ConnectionManager and starts this ConnnectionManager listening 
+	 * Sets the port number for this ConnectionListener and starts this ConnnectionManager listening 
 	 * @param callBack - callback for connections
 	 * @param port
 	 */
@@ -186,7 +186,7 @@ public class ConnectionManager {
 			return;
 		}
 		
-		ConnectionManager.port = port;
+		ConnectionListener.port = port;
 		
 		beginListen(callBack);	
 	}
@@ -225,7 +225,7 @@ public class ConnectionManager {
 
 		@Override
 		public void run() {
-			System.out.println("ConnectionManager::BeginListen on Port " + port);
+			System.out.println("ConnectionListener::BeginListen on Port " + port);
 			
 			try{
 				ss = new ServerSocket(port);
@@ -268,7 +268,7 @@ public class ConnectionManager {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("ConnectionManager::EndListen");
+			System.out.println("ConnectionListener::EndListen");
 			
 		}
 		

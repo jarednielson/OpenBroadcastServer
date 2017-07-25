@@ -8,16 +8,12 @@ import java.net.Socket;
 
 public class ClientListener implements ConnectionManagerCallable {
 
-	private Writer writer;
-	
-	
 	private Object lock;
 	private boolean continueTask;
 	
 	
 	public ClientListener(Socket socket, Writer writer, Object lock){
 		continueTask = true;
-		this.writer = writer;
 		this.lock = lock;
 	}
 	
@@ -42,9 +38,7 @@ public class ClientListener implements ConnectionManagerCallable {
 					s.close();
 					break;
 				}
-				synchronized(lock){
-					writer.write(msg);
-				}
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -54,7 +48,6 @@ public class ClientListener implements ConnectionManagerCallable {
 		
 		try {
 			in.close();
-			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
