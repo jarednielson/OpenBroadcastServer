@@ -127,7 +127,7 @@ public class ConnectionListener {
 	 * @param callBack
 	 */
 	public void beginListen(ConnectionListenerCallable callBack){
-		if(!isListening){
+		if(isListening){
 			return;
 		}
 		

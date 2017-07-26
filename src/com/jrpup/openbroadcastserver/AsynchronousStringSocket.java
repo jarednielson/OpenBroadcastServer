@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 
 /**
@@ -51,7 +52,7 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 	 * @param postable
 	 * @throws IOException
 	 */
-	public void readLinesAsync(AsynchronousStringSocketPostable postable) throws IOException{
+	public void readLinesAsync(AsynchronousStringSocketPostable postable, Object[] payload) throws IOException{
 		if(isReading){
 			return;
 		}
@@ -80,7 +81,7 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 				
 				
 				if(postable != null){
-					postable.postString(incoming.toString());
+					postable.postString(incoming.toString(), payload);
 				}
 				
 				isReading = false;
@@ -123,6 +124,14 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 		thread.start();
 				
 		
+	}
+	
+	public InetAddress getInetAddress(){
+		return socket.getInetAddress();
+	}
+	
+	public InetAddress getLocalAddress(){
+		return socket.getLocalAddress();
 	}
 	
 	
