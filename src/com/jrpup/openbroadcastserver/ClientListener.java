@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.Socket;
 
-public class ClientListener implements ConnectionManagerCallable {
+public class ClientListener implements ConnectionListenerCallable {
 
 	private Object lock;
 	private boolean continueTask;

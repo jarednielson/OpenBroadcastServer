@@ -46,7 +46,7 @@ public class ConnectionListener {
 	/**
 	 * List of callBack subscribers
 	 */
-	private ConnectionManagerCallable callBack;
+	private ConnectionListenerCallable callBack;
 	
 	/**
 	 * Flag which is true if the ConnectionListener is listening
@@ -126,7 +126,7 @@ public class ConnectionListener {
 	 * Sets a callback method whena  connection is made.
 	 * @param callBack
 	 */
-	public void beginListen(ConnectionManagerCallable callBack){
+	public void beginListen(ConnectionListenerCallable callBack){
 		if(!isListening){
 			return;
 		}
@@ -181,7 +181,7 @@ public class ConnectionListener {
 	 * @param callBack - callback for connections
 	 * @param port
 	 */
-	public void beginListen(ConnectionManagerCallable callBack, int port){
+	public void beginListen(ConnectionListenerCallable callBack, int port){
 		if(isListening){
 			return;
 		}

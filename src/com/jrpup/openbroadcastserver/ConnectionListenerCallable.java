@@ -7,6 +7,6 @@ import java.net.Socket;
  * @author Jared Nielson
  *
  */
-public interface ConnectionManagerCallable {
+public interface ConnectionListenerCallable {
 	public void OnConnection(Socket s);
 }
