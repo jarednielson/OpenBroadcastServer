@@ -76,7 +76,7 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					return;
 				}
 				
 				
@@ -109,6 +109,8 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 			throw new IOException("The underlying socket has been closed");
 		}
 		
+		isWriting = true;
+		
 		Thread thread = new Thread(new Runnable(){
 
 			@Override
@@ -117,6 +119,7 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 				out.flush();
 				
 				postable.onMessageSent(payload);
+				isWriting = false;
 			}
 			
 		});

@@ -1,5 +1,6 @@
 package com.jrpup.openbroadcastserver;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class OpenBroadcastServerLauncher {
@@ -19,8 +20,14 @@ public class OpenBroadcastServerLauncher {
 		
 		in.nextLine();
 		
-		conListener.endListen();
 		
+		conListener.endListen();
+		try {
+			conManager.shutDown();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		in.close();
 	}
 

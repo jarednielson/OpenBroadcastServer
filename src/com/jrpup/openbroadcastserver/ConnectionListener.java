@@ -53,10 +53,6 @@ public class ConnectionListener {
 	 * Also used to stop listenerThread
 	 */
 	private volatile boolean isListening;
-	/**
-	 * The current number of connections open by the ConnectionListener
-	 */
-	private int numConnections;
 	
 	/**
 	 * Private constructor as per the Singleton pattern.
@@ -65,7 +61,6 @@ public class ConnectionListener {
 	private ConnectionListener(){
 		isListening = false;
 		connections = new ArrayList<Socket>();
-		numConnections = 0;
 		
 		
 	}
@@ -239,7 +234,6 @@ public class ConnectionListener {
 				try {
 					Socket connection = ss.accept();
 					connections.add(connection);
-					numConnections++;
 					if(callBack != null){
 						Thread callable = new Thread(new Runnable(){
 

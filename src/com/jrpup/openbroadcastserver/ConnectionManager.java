@@ -44,6 +44,16 @@ public class ConnectionManager implements ConnectionListenerCallable, Asynchrono
 		return clientSockets;
 	}
 	
+	/**
+	 * Closes all streams and connections associated with this
+	 * @throws IOException 
+	 */
+	public void shutDown() throws IOException{
+		for(String key : clientSockets.keySet()){
+			clientSockets.get(key).close();
+		}
+	}
+	
 
 	@Override
 	public void postString(String s, Object[] payload) {
