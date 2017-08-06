@@ -69,9 +69,7 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 			@Override
 			public void run() {
 				try {
-					while(in.ready()){
-						incoming.append(in.readLine());
-					}
+					incoming.append(in.readLine());
 					
 					
 				} catch (IOException e) {
@@ -79,12 +77,12 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 					return;
 				}
 				
+				isReading = false;
 				
 				if(postable != null){
 					postable.postString(incoming.toString(), payload);
 				}
 				
-				isReading = false;
 			}
 			
 		});
@@ -101,8 +99,9 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 	 */
 	public void sendLinesAsync(String message, AsynchronousStringSocketPostable postable, Object[] payload) throws IOException{
 		//TODO: Make this more thread safe and buffered track postables and call them all.
+		outgoing.append(message);
 		if(isWriting){
-			outgoing.append(message);
+			return;
 		}
 		
 		if(socket.isClosed()){
@@ -117,9 +116,10 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 			public void run() {
 				out.print(outgoing.toString());
 				out.flush();
+				outgoing = new StringBuilder();
 				
-				postable.onMessageSent(payload);
 				isWriting = false;
+				postable.onMessageSent(payload);
 			}
 			
 		});
