@@ -82,6 +82,7 @@ public class AsynchronousStringSocket implements Closeable, AutoCloseable {
 				if(postable != null){
 					postable.postString(incoming.toString(), payload);
 				}
+				incoming = new StringBuilder();
 				
 			}
 			

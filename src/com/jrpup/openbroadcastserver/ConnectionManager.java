@@ -30,9 +30,9 @@ public class ConnectionManager implements ConnectionListenerCallable, Asynchrono
 		// TODO Auto-generated method stub
 		try {
 			AsynchronousStringSocket asyncSocket = new AsynchronousStringSocket(s);
-			clientSockets.put(s.getInetAddress().toString(), asyncSocket);
+			clientSockets.put(s.getInetAddress().toString() + "::" + s.getPort(), asyncSocket);
 			
-			asyncSocket.readLinesAsync(this, new Object[]{s.getInetAddress().toString()});
+			asyncSocket.readLinesAsync(this, new Object[]{s.getInetAddress().toString() + "::" + s.getPort()});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,12 +57,23 @@ public class ConnectionManager implements ConnectionListenerCallable, Asynchrono
 
 	@Override
 	public void postString(String s, Object[] payload) {
-		//TODO: Need buffer system
 		String poster = (String) payload[0];
+		//check if message is null
+		if(s.equalsIgnoreCase("null")){
+			//clean up socket
+			try {
+				clientSockets.get(poster).close();
+				clientSockets.remove(poster);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
 		for(String key : clientSockets.keySet()){
-//			if(poster.equals(key)){
-//				continue;
-//			}
+			if(poster.equals(key)){
+				continue;
+			}
 			
 			try {
 				clientSockets.get(key).sendLinesAsync(s, this, null);
