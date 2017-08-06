@@ -76,7 +76,7 @@ public class ConnectionManager implements ConnectionListenerCallable, Asynchrono
 			}
 			
 			try {
-				clientSockets.get(key).sendLinesAsync(s, this, null);
+				clientSockets.get(key).sendLinesAsync(s + "\n", this, null);
 			} catch (IOException e) {
 				try {
 					clientSockets.get(key).close();
